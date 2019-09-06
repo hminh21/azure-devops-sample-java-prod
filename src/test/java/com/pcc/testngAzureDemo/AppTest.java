@@ -20,62 +20,61 @@ public class AppTest {
   public static URL url;
   public static DesiredCapabilities capabilities;
   public static AndroidDriver<MobileElement> driver;
-  //1
-//  @Parameters({ deviceName_,"platformVersion_"})
+  //@Parameters({ deviceName_,"platformVersion_"})
   @BeforeSuite
   public void setupAppium() throws MalformedURLException {
-	  //Run test on Kobiton
+    //Run test on Kobiton
 	  
 	  
-// The generated session will be visible to you only. 
+    //The generated session will be visible to you only. 
     String kobitonServerUrl = "https://" + System.getenv("KOBITON_USERNAME") + ":" + System.getenv("KOBITON_API_KEY") + "@api.kobiton.com/wd/hub";
-	  DesiredCapabilities capabilities = new DesiredCapabilities();
-	  // The generated session will be visible to you only. 
-	  capabilities.setCapability("sessionName", "PMO test");
-	  capabilities.setCapability("sessionDescription", "abc");
-	  capabilities.setCapability("deviceOrientation", "portrait");
-	  capabilities.setCapability("captureScreenshots", true);
-	  // The maximum size of application is 500MB
-	  // By default, HTTP requests from testing library are expired
-	  // in 2 minutes while the app copying and installation may
-	  // take up-to 30 minutes. Therefore, you need to extend the HTTP
-	  // request timeout duration in your testing library so that
-	  // it doesn't interrupt while the device is being initialized.
-	  capabilities.setCapability("app", System.getenv("KOBITON_SESSION_APPLICATION"));
+    DesiredCapabilities capabilities = new DesiredCapabilities();
+    // The generated session will be visible to you only. 
+    capabilities.setCapability("sessionName", "PMO test");
+    capabilities.setCapability("sessionDescription", "abc");
+    capabilities.setCapability("deviceOrientation", "portrait");
+    capabilities.setCapability("captureScreenshots", true);
+    // The maximum size of application is 500MB
+    // By default, HTTP requests from testing library are expired
+    // in 2 minutes while the app copying and installation may
+    // take up-to 30 minutes. Therefore, you need to extend the HTTP
+    // request timeout duration in your testing library so that
+    // it doesn't interrupt while the device is being initialized.
+    capabilities.setCapability("app", System.getenv("KOBITON_SESSION_APPLICATION"));
 
-	  capabilities.setCapability("deviceGroup", "KOBITON");
-	  // For deviceName, platformVersion Kobiton supports wildcard
-	  // character *, with 3 formats: *text, text* and *text*
+    capabilities.setCapability("deviceGroup", "KOBITON");
+    // For deviceName, platformVersion Kobiton supports wildcard
+    // character *, with 3 formats: *text, text* and *text*
     // If there is no *, Kobiton will match the exact text provided
     
     String deviceName = System.getenv("KOBITON_DEVICE_NAME") != null ? System.getenv("KOBITON_DEVICE_NAME") : "Galaxy*";
     String platformVersion = System.getenv("KOBITON_SESSION_PLATFORM_VERSION") != null ? System.getenv("KOBITON_SESSION_PLATFORM_VERSION") : "6*";
     String platformName = System.getenv("KOBITON_DEVICE_PLATFORM_NAME") != null ? System.getenv("KOBITON_DEVICE_PLATFORM_NAME") : "android";
-		
-		capabilities.setCapability("deviceName", deviceName);
-		capabilities.setCapability("platformVersion", platformVersion);
-	  capabilities.setCapability("platformName", platformName);
+    
+    capabilities.setCapability("deviceName", deviceName);
+    capabilities.setCapability("platformVersion", platformVersion);
+    capabilities.setCapability("platformName", platformName);
 
-      url = new URL(kobitonServerUrl);
+    url = new URL(kobitonServerUrl);
 
     driver = new AndroidDriver<MobileElement>(url, capabilities);
     driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
   }
-  //5
+
   @AfterSuite
   public void uninstallApp() throws InterruptedException {
   System.out.println("After Suite");
     driver.removeApp("io.appium.android.apis" );
-		driver.quit();
-		String kobitonSessionId = driver.getCapabilities().getCapability("kobitonSessionId").toString();
+    String kobitonSessionId = driver.getSessionDetails().get("kobitonSessionId").toString();
     System.out.println("kobitonSessionId: " + kobitonSessionId);
+    driver.quit();
   }
-  //6
+
   @Test (enabled=true) public void myFirstTest() throws InterruptedException {
-	  System.out.println("First Test");
-	  Thread.sleep(5000);
-	  System.out.println("1");
-	  System.out.println("2");
+    System.out.println("First Test");
+    Thread.sleep(5000);
+    System.out.println("1");
+    System.out.println("2");
     driver.resetApp();
   }
 }
